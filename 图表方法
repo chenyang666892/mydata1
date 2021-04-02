@@ -1,0 +1,42 @@
+#################################################################
+#                   三种图表方法
+#################################################################
+#install.packages("ggpubr")
+#或者从GitHub安装最新的开发版本
+#if(!require(devtools)) install.packages("devtools")
+#devtools::install_github("kassambara/ggpubr")
+
+#dat <- filter(dat,type != "Control_lymph")
+#dat <- dat[c(7,8,13:16),]
+###dat <- read.csv(paste0(GEOid,'_',geneid,'.csv'),header = T,row.names = 1)
+
+#######01 ggpubr
+pdf("01_ggpubr.pdf")
+if(require('ggpubr')){
+  library(ggpubr)
+  p <- ggboxplot(dat, x = "type", y = "gene",
+                 color = "type", palette = "jco",
+                 add = "jitter")
+  #  Add p-value
+  p + stat_compare_means(method = "t.test")
+}
+dev.off()
+
+#######02 ggstatsplot
+pdf("02_gstatsplot.pdf")
+#install.packages("ggstatsplot")
+if(require('ggstatsplot')){
+  library(ggstatsplot)
+  ggbetweenstats(data = dat, x = type,  y = gene)
+}
+dev.off()
+
+#######03 ggplot2
+pdf("03_ggplot2.pdf")
+if(require('ggplot2')){
+  library(ggplot2)
+  ggplot(dat,aes(x=type,y=gene))+
+    geom_boxplot()+
+    theme_bw()
+}
+dev.off()
